@@ -2,22 +2,25 @@
 # Disciplina - Raciocínio Algorítmico
 # Autor do código: Marcos Paulo Ruppel - turma 1U (Noite)
 # Atividade somativa - jogo Jokenpo ( Pedra, Papel ou Tesoura )
-# Versão 1.0.0
+# Versão 1.1.0
 import os
 import platform
 import random
-import getpass
+import getpass  # utilizada para mascarar a entrada dos jogadores no modo multiplayer
 
 
-def sair(): os.system("exit")
+def sair():
+    clear()
+    print("Até logo!!")
+    os.system("exit")
 
 
-# verifica o sistema host para definir os comandos apropriados de terminal
+# verifica o SO host para definir os comandos apropriados de terminal
 if platform.system() == 'Windows':
-    def clear(): os.system("cls")
-    def pause(): os.system("pause")
+    def clear(): os.system("cls")  # limpa o terminal
+    def pause(): os.system("pause")  # aguarda entrada do usuário antes de avançar
 elif platform.system() == 'Linux':
-    def clear(): os.system("clear")
+    def clear(): os.system('clear')
     def pause(): os.system("echo Pressione ENTER para continuar; read dummy;")
 else:
     print("Desculpe, essa aplicação é incompatível com seu sistema operacional.")
@@ -30,51 +33,50 @@ def singleplayer():
     jogadasvalidas = ["pedra", "tesoura", "papel"]
     continuarjogo = 's'
 
-    while continuarjogo.lower() == 's':
+    while continuarjogo.lower() == 's':  # laço de repetição do jogo controlado pela variável continuarjogo
         clear()
-        jogadaplayer = ""
+        jogadaplayer = ""  # zera a jogada do player ao iniciar cada rodada
 
-        while jogadaplayer not in jogadasvalidas:
+        while jogadaplayer not in jogadasvalidas:  # valida a jogada do player antes de prosseguir
             clear()
             jogadaplayer = input("Faça sua jogada (pedra, tesoura ou papel?): ")
 
-        jogadacpu = random.choice(jogadasvalidas)
+        jogadacpu = random.choice(jogadasvalidas)  # sorteia a jogada da CPU dentro da lista de opções válidas
 
         if jogadaplayer == jogadacpu:
-            print("Ambos escolheram " + jogadacpu + ". Empate!")
-            scoreplayer += 1
-            scorecpu += 1
+            print(f"Ambos escolheram {jogadacpu}.\nEmpate!\n")
         elif jogadaplayer == "pedra":
             if jogadacpu == "tesoura":
-                print("CPU escolheu " + jogadacpu + ". Vc venceu essa rodada!\n")
+                print("CPU escolheu " + jogadacpu + ".\n## Vc venceu essa rodada! ##\n")
                 scoreplayer += 1
             else:
-                print("CPU escolheu " + jogadacpu + ". CPU venceu essa rodada!\n")
+                print("CPU escolheu " + jogadacpu + ".\n## CPU venceu essa rodada! ##\n")
                 scorecpu += 1
         elif jogadaplayer == "papel":
             if jogadacpu == "pedra":
-                print("CPU escolheu " + jogadacpu + ". Vc venceu essa rodada!\n")
+                print("CPU escolheu " + jogadacpu + ".\n## Vc venceu essa rodada! ##\n")
                 scoreplayer += 1
             else:
-                print("CPU escolheu " + jogadacpu + ". CPU venceu essa rodada!\n")
+                print("CPU escolheu " + jogadacpu + ".\n## CPU venceu essa rodada! ##\n")
                 scorecpu += 1
         elif jogadaplayer == "tesoura":
             if jogadacpu == "papel":
-                print("CPU escolheu " + jogadacpu + ". Vc venceu essa rodada!\n")
+                print("CPU escolheu " + jogadacpu + ".\n## Vc venceu essa rodada! ##\n")
                 scoreplayer += 1
             else:
-                print("CPU escolheu " + jogadacpu + ". CPU venceu essa rodada!\n")
+                print("CPU escolheu " + jogadacpu + ".\n## CPU venceu essa rodada! ##\n")
                 scorecpu += 1
         else:
-            print("Opção inválida! Escolha pedra, tesoura ou papel\n")
-            pause()
-        print("Score atual:\n Jogador: %i\n CPU: %i\n" % (scoreplayer, scorecpu))
+            clear()
+            print("Erro!")
+        print("Placar atual:\n Jogador: %i\n CPU: %i\n" % (scoreplayer, scorecpu))
         continuarjogo = input("Deseja continuar jogando? (s/n): ")
     clear()
-    print("\t\t ==== FIM DE JOGO! ====")
+    #  tela de resultados finais
+    print("\t\t==== FIM DE JOGO! ====")
     print("\n\nPLACAR FINAL:\n Jogador: %i\n CPU: %i\n" % (scoreplayer, scorecpu))
     pause()
-    return 0
+    menuprincipal()  # retorna ao menu inicial
 
 
 # modo jogador vs. jogador
@@ -85,12 +87,11 @@ def multiplayer():
     jogadasvalidas = ["pedra", "tesoura", "papel"]
     continuarjogo = 's'
 
-    def playervencedor(player):
-        print(player1 + " = " + jogadaplayer1)
-        print(player2 + " = " + jogadaplayer2)
-        print(player + " venceu essa rodada!\n")
+    def vencedor(player):  # função que recebe o player vencedor e exibe o resultado da rodada
+        print(f">{player1} jogou {jogadaplayer1}\n>{player2} jogou {jogadaplayer2}\n")
+        print(f"## {player} venceu essa rodada! ##\n")
 
-    while continuarjogo.lower() == 's':
+    while continuarjogo.lower() == 's':  # laço de repetição do jogo controlado pela variável continuarjogo
         clear()
         jogadaplayer1 = ""
         jogadaplayer2 = ""
@@ -102,51 +103,96 @@ def multiplayer():
             jogadaplayer2 = getpass.getpass(player2 + ", faça sua jogada (pedra, tesoura ou papel?): ")
 
         if jogadaplayer1 == jogadaplayer2:
-            print("Ambos escolheram " + jogadaplayer2 + ". Empate!")
-            scorep1 += 1
-            scorep2 += 1
+            print(f"Ambos escolheram {jogadaplayer2}.\nEmpate!\n")
         elif jogadaplayer1 == "pedra":
             if jogadaplayer2 == "tesoura":
-                playervencedor(player1)
+                vencedor(player1)
                 scorep1 += 1
             else:
-                playervencedor(player2)
+                vencedor(player2)
                 scorep2 += 1
         elif jogadaplayer1 == "papel":
             if jogadaplayer2 == "pedra":
-                playervencedor(player1)
+                vencedor(player1)
                 scorep1 += 1
             else:
-                playervencedor(player2)
+                vencedor(player2)
                 scorep2 += 1
         elif jogadaplayer1 == "tesoura":
             if jogadaplayer2 == "papel":
-                playervencedor(player1)
+                vencedor(player1)
                 scorep1 += 1
             else:
-                playervencedor(player2)
+                vencedor(player2)
                 scorep2 += 1
         else:
-            print("Opção inválida! Escolha pedra, tesoura ou papel\n")
-            pause()
-        print("Score atual:\n" + player1 + ": %i\n" % scorep1 + player2 + ": %i\n" % scorep2)
+            clear()
+            print("Erro!")
+        print("Placar atual:\n" + player1 + ": %i\n" % scorep1 + player2 + ": %i\n" % scorep2)
         continuarjogo = input("Desejam continuar jogando? (s/n): ")
     clear()
     print("\t\t ==== FIM DE JOGO! ====")
-    print("\n\nPLACAR FINAL:\n" + player1 + ": %i\n" % scorep1 + player2 + ": %i\n" % scorep2)
+    print(f"\n\nPLACAR FINAL:\n {player1}: %i\n {player2}: %i\n" % (scorep1, scorep2))
     pause()
-    return 0
+    menuprincipal()  # retorna ao menu inicial
 
 
 # modo CPU vs. CPU
 def cpuvscpu():
-    return 0
+    scorecpu1, scorecpu2 = 0, 0
+    player1, player2 = "CPU1", "CPU2"
+    jogadasvalidas = ["pedra", "tesoura", "papel"]
+    continuarjogo = 's'
+
+    def vencedor(player):  # função que recebe o player vencedor e exibe o resultado da rodada
+        print(f">{player1} jogou {jogadacpu1}\n>{player2} jogou {jogadacpu2}\n")
+        print(f"## {player} venceu essa rodada! ##\n")
+
+    while continuarjogo.lower() == 's':  # laço de repetição do jogo controlado pela variável continuarjogo
+        clear()
+        jogadacpu1 = random.choice(jogadasvalidas)
+        jogadacpu2 = random.choice(jogadasvalidas)
+
+        if jogadacpu1 == jogadacpu2:
+            print(f"Ambos escolheram {jogadacpu2}.\nEmpate!\n")
+        elif jogadacpu1 == "pedra":
+            if jogadacpu2 == "tesoura":
+                vencedor(player1)
+                scorecpu1 += 1
+            else:
+                vencedor(player2)
+                scorecpu2 += 1
+        elif jogadacpu1 == "papel":
+            if jogadacpu2 == "pedra":
+                vencedor(player1)
+                scorecpu1 += 1
+            else:
+                vencedor(player2)
+                scorecpu2 += 1
+        elif jogadacpu1 == "tesoura":
+            if jogadacpu2 == "papel":
+                vencedor(player1)
+                scorecpu1 += 1
+            else:
+                vencedor(player2)
+                scorecpu2 += 1
+        else:
+            clear()
+            print("Erro!")
+        print(f"Placar atual:\n {player1}: %i\n {player2}: %i\n" % (scorecpu1, scorecpu2))
+        continuarjogo = input("Deseja continuar jogando? (s/n): ")
+    clear()
+    #  tela de resultados finais
+    print("\t\t==== FIM DE JOGO! ====")
+    print(f"\n\nPLACAR FINAL:\n {player1}: %i\n {player2}: %i\n" % (scorecpu1, scorecpu2))
+    pause()
+    menuprincipal()  # retorna ao menu inicial
 
 
 # menu de seleção de jogo
 def menuprincipal():
     clear()
-    print("\t\t ====== PEDRA - PAPEL - TESOURA ======")
+    print("\t\t ====== PEDRA - TESOURA - PAPEL ======")
     print("\n\nSelecione o modo de jogo:\n 1. Jogador vs CPU\n 2. Jogador x Jogador\n 3. CPU x CPU\n")
     print("Ou digite 0 para sair:\t")
     modojogo = int(input(""))
@@ -166,4 +212,4 @@ def menuprincipal():
         menuprincipal()
 
 
-menuprincipal()  # Chama o menu inicial do jogo.
+menuprincipal()
