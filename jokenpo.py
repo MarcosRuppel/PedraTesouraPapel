@@ -166,4 +166,4 @@ def menuprincipal():
         menuprincipal()
 
 
-menuprincipal()
+menuprincipal()  # Chama o menu inicial do jogo.
